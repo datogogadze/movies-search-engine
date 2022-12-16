@@ -1,0 +1,11 @@
+version: '3'
+services:
+  search_engine:
+    image: solr
+    container_name: search_engine
+    ports:
+     - "8984:8983"
+    volumes:
+      - ./solr:/var/solr/data
+volumes:
+  data:

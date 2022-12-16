@@ -1,0 +1,115 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f4edec;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page_title {
+  font-family: monospace;
+  height: 40px;
+  font-size: 40px;
+  color: teal;
+}
+
+.search_bar {
+  display: flex;
+}
+
+.search_bar_text input{
+  width: 400px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 25px;
+  font-family: monospace;
+  font-style: italic;
+  text-indent: 10px;
+  border-radius: 15px;
+}
+
+.search_bar_text input:focus::placeholder {
+  color: transparent;
+}
+
+.search_bar_button {
+  border-radius: 15px;
+  margin-left: 10px;
+  width: 70px;
+  font-size: 20px;
+  font-family: monospace;
+}
+
+button:hover {
+  background-color: teal;
+  transition: 0.1 s;
+}
+
+.pagination_section {
+  width: 700px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination_section a {
+  padding: 5px 10px;  
+  color: black;
+  text-decoration: none;
+}
+
+.pagination_section a:hover:not(.active) {
+  background-color: #031F3B;
+  color: white;
+}
+
+.pagination_section .active {
+  background-color: teal;
+  color: white;
+}
+
+.movies {
+  width: 700px;
+  height: 500px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.movies::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}
+
+.movie {
+  margin-top: 10px;
+  border: solid;
+  border-radius: 15px;
+  border-color: black;
+  padding: 10px;
+  font-family: monospace;
+  font-style: italic;
+  background-color: #7d7b7b;
+  color: white;
+}
+
+.movie div {
+  margin-top: 5px;
+}
+
+.not_found {
+  font-family: monospace;
+  height: 50px;
+  font-size: 40px;
+  color: teal;
+  padding: 50px;
+  text-align: center;
+}
