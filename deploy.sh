@@ -9,8 +9,8 @@ docker rm search_engine
 # start solr container
 docker-compose up -d
 
-# wait for docker container to finish initializing
-sleep 3s
+# check solr status
+docker exec -it search_engine solr status
 
 # index movies_core with data from movies.json
 docker exec -it search_engine /opt/solr-9.1.0/bin/post -c movies_core /var/solr/data/movies_core/movies.json

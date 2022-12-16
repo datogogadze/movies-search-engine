@@ -1,6 +1,8 @@
 # search-engine
 
-search engine for movies. data is in search-engine/solr/movies_core/movies.json file.
+Search engine for movies. Express.js server is started on localhost:3000.
+
+Data is in search-engine/solr/movies_core/movies.json file.
 
 Indexing is performed by Solr. Which is run in docker container 8984:8983.
 
