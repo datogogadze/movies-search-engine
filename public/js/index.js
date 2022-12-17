@@ -1,8 +1,12 @@
+let active_search = '';
+
 document
   .querySelector('.search_bar_button')
   .addEventListener('click', async (event) => {
     const searchInput = document.querySelector('input[name="search_text"]');
     const query = searchInput.value;
+    if (!query) return;
+    active_search = query;
     const result = await sendRequest(query, 1);
     if (!result) return;
     const { success, num_found, movies } = result;
@@ -13,13 +17,10 @@ document
   });
 
 const sendRequest = async (query, page) => {
-  if (query) {
-    const response = await fetch(`/search?query=${query}&page=${page}`);
-    const data = await response.json();
-    console.log(data);
-    return data;
-  }
-  return null;
+  const response = await fetch(`/search?query=${query}&page=${page}`);
+  const data = await response.json();
+  console.log(data);
+  return data;
 };
 
 let active = undefined;
@@ -44,7 +45,12 @@ const addPagination = (num_found) => {
       active = a;
       a.classList.add('active');
       const searchInput = document.querySelector('input[name="search_text"]');
-      const query = searchInput.value;
+      let query = searchInput.value;
+      if (!query) {
+        if (!active_search) return;
+        query = active_search;
+        searchInput.value = query;
+      }
       const result = await sendRequest(query, i);
       if (!result) return;
       const { success, num_found, movies } = result;

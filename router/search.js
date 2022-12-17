@@ -13,6 +13,7 @@ router.get('/', async (req, res) => {
     const q = sampleCore
       .query()
       .q(query)
+      .qf('title^5 year cast^2 genres')
       .df('catch_all')
       .start((page - 1) * page_size)
       .rows(10);

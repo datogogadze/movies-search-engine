@@ -12,6 +12,8 @@ docker-compose up -d
 # check solr status
 docker exec -it search_engine solr status
 
+curl "http://localhost:8984/solr/movies_core/update?commit=true" -H "Content-Type: text/xml" --data-binary '<delete><query>*:*</query></delete>'
+
 # index movies_core with data from movies.json
 docker exec -it search_engine /opt/solr-9.1.0/bin/post -c movies_core /var/solr/data/movies_core/movies.json
 
