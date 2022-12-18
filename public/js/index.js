@@ -1,5 +1,15 @@
 let active_search = '';
 
+const search_bar = document.querySelector('input[name="search_text"]');
+search_bar.addEventListener('input', async (event) => {
+  const term = search_bar.value;
+  if (term) {
+    const { success, suggestions } = await sendSuggestionsRequest(term);
+    if (!success) return;
+    showSuggestions(suggestions);
+  }
+});
+
 document
   .querySelector('.search_bar_button')
   .addEventListener('click', async (event) => {
@@ -7,7 +17,7 @@ document
     const query = searchInput.value;
     if (!query) return;
     active_search = query;
-    const result = await sendRequest(query, 1);
+    const result = await sendSearchRequest(query, 1);
     if (!result) return;
     const { success, num_found, movies } = result;
     if (!success) return;
@@ -16,8 +26,15 @@ document
     showResults(movies);
   });
 
-const sendRequest = async (query, page) => {
+const sendSearchRequest = async (query, page) => {
   const response = await fetch(`/search?query=${query}&page=${page}`);
+  const data = await response.json();
+  console.log(data);
+  return data;
+};
+
+const sendSuggestionsRequest = async (term) => {
+  const response = await fetch(`/search/suggestions?term=${term}`);
   const data = await response.json();
   console.log(data);
   return data;
@@ -25,11 +42,12 @@ const sendRequest = async (query, page) => {
 
 let active = undefined;
 const addPagination = (num_found) => {
-  const num_pages = Math.ceil(num_found / 10);
+  let num_pages = Math.min(15, Math.ceil(num_found / 10));
   const pagination = document.querySelector('.pagination_section');
   while (pagination.firstChild) {
     pagination.removeChild(pagination.firstChild);
   }
+
   for (let i = 1; i <= num_pages; i++) {
     const a = document.createElement('a');
     a.setAttribute('href', '#');
@@ -44,14 +62,13 @@ const addPagination = (num_found) => {
       active.classList.remove('active');
       active = a;
       a.classList.add('active');
-      const searchInput = document.querySelector('input[name="search_text"]');
       let query = searchInput.value;
       if (!query) {
         if (!active_search) return;
         query = active_search;
-        searchInput.value = query;
+        search_bar.value = query;
       }
-      const result = await sendRequest(query, i);
+      const result = await sendSearchRequest(query, i);
       if (!result) return;
       const { success, num_found, movies } = result;
       if (!success) return;
@@ -66,6 +83,10 @@ const showResults = (movies) => {
   while (movies_div.firstChild) {
     movies_div.removeChild(movies_div.firstChild);
   }
+
+  document.querySelector('.suggestions').style.display = 'none';
+  document.querySelector('.pagination_movies').style.display = 'block';
+
   if (movies.length === 0) {
     const notFound = document.createElement('p');
     notFound.classList.add('not_found');
@@ -96,3 +117,34 @@ const showResults = (movies) => {
     movies_div.appendChild(movie_div);
   });
 };
+
+const showSuggestions = (suggestions) => {
+  const ul = document.querySelector('.suggestions');
+  while (ul.firstChild) {
+    ul.removeChild(ul.firstChild);
+  }
+
+  ul.style.display = 'block';
+  document.querySelector('.pagination_movies').style.display = 'none';
+
+  if (suggestions.length === 0) return;
+
+  suggestions.forEach((suggestion) => {
+    const li = document.createElement('li');
+    li.classList.add('suggestion');
+    li.appendChild(document.createTextNode(suggestion.term));
+    li.addEventListener('mousedown', (event) => {
+      search_bar.value = suggestion.term;
+      document.querySelector('.search_bar_button').click();
+    });
+    li.addEventListener('focus', function () {
+      this.style.backgroundColor = 'red';
+    });
+    ul.appendChild(li);
+  });
+};
+
+search_bar.addEventListener('focusout', (event) => {
+  document.querySelector('.suggestions').style.display = 'none';
+  document.querySelector('.pagination_movies').style.display = 'block';
+});

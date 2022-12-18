@@ -736,12 +736,12 @@
     -->
 
   <!-- Primary search handler, expected by most clients, examples and UI frameworks -->
-  <requestHandler name="/select" class="solr.SearchHandler">
+  <!-- <requestHandler name="/select" class="solr.SearchHandler">
     <lst name="defaults">
       <str name="echoParams">explicit</str>
       <int name="rows">10</int>
     </lst>
-  </requestHandler>
+  </requestHandler> -->
 
   <!-- A request handler that returns indented JSON by default -->
   <requestHandler name="/query" class="solr.SearchHandler">
@@ -810,6 +810,31 @@
     </lst>
     -->
   </searchComponent>
+
+  <searchComponent name="suggest" class="solr.SuggestComponent">
+    <lst name="suggester">
+      <str name="name">mySuggester</str>
+      <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
+      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+      <str name="field">catch_all</str>
+      <!-- <str name="weightField"></str> -->
+      <str name="suggestAnalyzerFieldType">text_general</str>
+      <str name="buildOnStartup">false</str>
+      <bool name="exactMatchFirst">true</bool>
+      <str name="highlight">false</str>
+    </lst>
+  </searchComponent>
+
+  <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy">
+    <lst name="defaults">
+       <str name="suggest.dictionary">mySuggester</str>
+      <str name="suggest">true</str>
+      <str name="suggest.count">10</str>
+    </lst>
+    <arr name="components">
+      <str>suggest</str>
+    </arr>
+  </requestHandler>
 
   <!-- A request handler for demonstrating the spellcheck component.
 

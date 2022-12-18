@@ -9,22 +9,30 @@
 </head>
 <body>
     <div class="container">
-        <p class="page_title">This is a search engine</p>
+        <div class="page_title" onclick="window.location.href = '/'">
+            <p>This is a search engine</p>
+        </div>
         <div class="search_bar">
-            <div class="search_bar_text">
+            <div class="search_bar_text_button">
                 <input 
                     name="search_text"
                     type="text"
                     placeholder="Search..."
                     onkeydown = "if (event.keyCode == 13) document.querySelector('.search_bar_button').click()" >
+                    <button class="search_bar_button">Go</button>
             </div>
-            <button class="search_bar_button">Go</button>
+            <ul class="suggestions">
+                
+            </ul>
         </div>
-        <div class="pagination_section">
 
+        <div class="pagination_movies">
+            <div class="pagination_section">
+
+            </div>
+    
+            <div class="movies">
         </div>
-
-        <div class="movies">
 
         </div>
 
