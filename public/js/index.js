@@ -13,8 +13,7 @@ search_bar.addEventListener('input', async (event) => {
 document
   .querySelector('.search_bar_button')
   .addEventListener('click', async (event) => {
-    const searchInput = document.querySelector('input[name="search_text"]');
-    const query = searchInput.value;
+    const query = search_bar.value;
     if (!query) return;
     active_search = query;
     const result = await sendSearchRequest(query, 1);
@@ -62,7 +61,7 @@ const addPagination = (num_found) => {
       active.classList.remove('active');
       active = a;
       a.classList.add('active');
-      let query = searchInput.value;
+      let query = search_bar.value;
       if (!query) {
         if (!active_search) return;
         query = active_search;
