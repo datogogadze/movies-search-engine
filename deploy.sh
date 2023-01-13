@@ -1,6 +1,6 @@
 # changer owner and permissions to movies_core
-sudo chown -R 8983:8983 ./solr/movies_core
-sudo chmod -R 777 ./solr/movies_core
+sudo chown -R 8983:8983 ./solr
+sudo chmod -R 777 ./solr
 
 # remove previous container if exists
 docker stop search_engine
@@ -16,6 +16,9 @@ curl "http://localhost:8984/solr/movies_core/update?commit=true" -H "Content-Typ
 
 # index movies_core with data from movies.json
 docker exec -it search_engine /opt/solr-9.1.0/bin/post -c movies_core /var/solr/data/movies_core/movies.json
+
+# index test_core with data from data.json
+docker exec -it search_engine /opt/solr-9.1.0/bin/post -c test_core /var/solr/data/test_core/data.json
 
 # start express server
 npm install

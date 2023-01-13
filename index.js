@@ -1,5 +1,6 @@
 const express = require('express');
 const search = require('./router/search');
+const spell = require('./router/spell');
 
 const app = express();
 
@@ -11,7 +12,12 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
+app.get('/spell-page', (req, res) => {
+  res.render('spellin-error-search');
+});
+
 app.use('/search', search);
+app.use('/spell', spell);
 
 const port = process.env.PORT | 3000;
 app.listen(port, () => {

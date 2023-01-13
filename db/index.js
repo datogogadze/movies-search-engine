@@ -11,6 +11,17 @@ class DbConnection {
     }
     return this.sampleCore;
   }
+
+  static getTestCore() {
+    if (!this.testCore) {
+      this.testCore = solr.createClient({
+        host: 'localhost',
+        port: '8984',
+        core: 'test_core',
+      });
+    }
+    return this.testCore;
+  }
 }
 
 module.exports = DbConnection;
