@@ -2,6 +2,7 @@
 <!-- Solr managed schema - automatically generated - DO NOT EDIT -->
 <schema name="default-config" version="1.6">
   <uniqueKey>id</uniqueKey>
+  <fieldType name="int" class="solr.TrieIntField" precisionStep="0" positionIncrementGap="0"/>
   <fieldType name="_nest_path_" class="solr.NestPathField" omitTermFreqAndPositions="true" omitNorms="true" maxCharsForDocValues="-1" stored="false" multiValued="false"/>
   <fieldType name="ancestor_path" class="solr.TextField">
     <analyzer type="index">
@@ -186,6 +187,19 @@
       <tokenizer name="whitespace"/>
     </analyzer>
   </fieldType>
+  <fieldType name="id_z" class="solr.TextField">
+		<analyzer>
+			<tokenizer class="solr.KeywordTokenizerFactory"/>
+			<filter class="solr.LengthFilterFactory" min="3" max="10000"/>
+			<filter class="solr.ASCIIFoldingFilterFactory"/>
+			<filter class="solr.LowerCaseFilterFactory"/>
+			<!-- replace any non digit or non a-z character by _ -->
+			<filter class="solr.PatternReplaceFilterFactory" pattern="[^\da-z]" replacement=""/>
+			<!-- remove leading 0 on partnumber -->
+			<filter class="solr.PatternReplaceFilterFactory" pattern="^([0]*)(.*)" replacement="$2"/>
+			<filter class="solr.LengthFilterFactory" min="1" max="1000"/>
+		</analyzer>
+	</fieldType>
   <field name="_nest_path_" type="_nest_path_"/>
   <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
   <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
@@ -196,6 +210,10 @@
   <field name="cast" type="text_general" multiValued="true" indexed="true" stored="true"/>
   <field name="genres" type="text_general" multiValued="true" indexed="true" stored="true"/>
   <field name="catch_all" type="text_general" multiValued="true" indexed="true" stored="true" />
+  <field name="copy_field" type="text_general" multiValued="true" indexed="true" stored="true" />
+  <!-- <field name="tester_1" type="int" multiValued="false" indexed="true" required="false" stored="true"/> -->
+  <!-- <field name="tester_2" type="int" multiValued="false" indexed="true" required="false" stored="true"/> -->
+  <dynamicField name="tester_*" type="text_general"  indexed="true"  stored="true" multiValued="true"/>
   <dynamicField name="*_txt_en_split_tight" type="text_en_splitting_tight" indexed="true" stored="true"/>
   <dynamicField name="*_descendent_path" type="descendent_path" indexed="true" stored="true"/>
   <dynamicField name="*_ancestor_path" type="ancestor_path" indexed="true" stored="true"/>
@@ -238,4 +256,7 @@
   <copyField source="year" dest="catch_all"/>
   <copyField source="cast" dest="catch_all"/>
   <copyField source="genres" dest="catch_all"/>
+
+  <copyField source="tester_*" dest="copy_field"/>
+
 </schema>
