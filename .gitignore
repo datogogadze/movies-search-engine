@@ -1,3 +1,4 @@
 node_modules
 solr/movies_core/data/*
 !solr/movies_core/data/.gitkeep
+.vscode

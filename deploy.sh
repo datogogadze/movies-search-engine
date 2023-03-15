@@ -17,8 +17,7 @@ docker exec -it search_engine solr status
 # # index movies_core with data from movies.json
 # docker exec -it search_engine /opt/solr-9.1.0/bin/post -c movies_core /var/solr/data/movies_core/movies.json
 
-node solr-upload.js
-
 # start express server
 npm install
+node solr-upload.js
 npm run dev

@@ -14,31 +14,30 @@ const processBatch = (batch) => {
 };
 
 const main = async () => {
-  await sampleCore.delete('id', '*');
-  await sampleCore.commit();
-
-  const jsonStream = JSONStream.parse('*');
-
-  let currentBatch = [];
-
-  jsonStream.on('data', (object) => {
-    currentBatch.push(object);
-
-    if (currentBatch.length >= batchSize) {
-      processBatch(currentBatch);
-      currentBatch = [];
-    }
-  });
-
-  jsonStream.on('end', () => {
-    if (currentBatch.length > 0) {
-      processBatch(currentBatch);
-    }
-    sampleCore.commit();
-    console.log('Finished uploading documents');
-  });
-
-  stream.pipe(jsonStream);
+  try {
+    await sampleCore.deleteAll({ commit: true });
+    console.log('Deleted all documents');
+    const jsonStream = JSONStream.parse('*');
+    let currentBatch = [];
+    jsonStream.on('data', (object) => {
+      currentBatch.push(object);
+      object.tester_1 = [1, 2, 3];
+      if (currentBatch.length >= batchSize) {
+        processBatch(currentBatch);
+        currentBatch = [];
+      }
+    });
+    jsonStream.on('end', () => {
+      if (currentBatch.length > 0) {
+        processBatch(currentBatch);
+      }
+      sampleCore.commit();
+      console.log('Finished uploading documents');
+    });
+    stream.pipe(jsonStream);
+  } catch (err) {
+    console.log({ err });
+  }
 };
 
 main();

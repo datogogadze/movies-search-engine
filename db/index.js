@@ -7,6 +7,7 @@ class DbConnection {
         host: 'localhost',
         port: '8984',
         core: 'movies_core',
+        path: '/solr',
       });
     }
     return this.sampleCore;

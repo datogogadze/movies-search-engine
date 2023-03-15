@@ -1,0 +1,20 @@
+[
+    {
+      "title": "movie1",
+      "year": 2010,
+      "cast": ["actor1"],
+      "genres": ["comedy"]
+    },
+    {
+      "title": "movie2",
+      "year": 2011,
+      "cast": ["actor2"],
+      "genres": ["documentary"]
+    },
+    {
+      "title": "movie3",
+      "year": 2012,
+      "cast": ["actor3"],
+      "genres": ["romcom"]
+    }
+]
