@@ -736,12 +736,15 @@
     -->
 
   <!-- Primary search handler, expected by most clients, examples and UI frameworks -->
-  <!-- <requestHandler name="/select" class="solr.SearchHandler">
+  <requestHandler name="/select" class="solr.SearchHandler">
     <lst name="defaults">
       <str name="echoParams">explicit</str>
       <int name="rows">10</int>
+      <!-- <str name="mm">75%</str>
+      <str name="defType">dismax</str>
+      <str name="df">title</str> -->
     </lst>
-  </requestHandler> -->
+  </requestHandler>
 
   <!-- A request handler that returns indented JSON by default -->
   <requestHandler name="/query" class="solr.SearchHandler">
@@ -816,10 +819,11 @@
       <str name="name">mySuggester</str>
       <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
       <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">catch_all</str>
+      <str name="field">title</str>
       <!-- <str name="weightField"></str> -->
       <str name="suggestAnalyzerFieldType">text_general</str>
-      <str name="buildOnStartup">false</str>
+      <str name="buildOnStartup">true</str>
+      <str name="buildOnCommit">true</str>
       <bool name="exactMatchFirst">true</bool>
       <str name="highlight">false</str>
     </lst>

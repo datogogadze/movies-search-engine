@@ -4,8 +4,11 @@ services:
     image: solr
     container_name: search_engine
     ports:
-     - "8984:8983"
+      - '8984:8983'
     volumes:
-      - ./solr:/var/solr/data
+      - type: bind
+        source: ./solr
+        target: /var/solr/data/
+
 volumes:
   data:

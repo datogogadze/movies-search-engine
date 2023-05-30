@@ -10,8 +10,8 @@ router.get('/', async (req, res) => {
   try {
     const { query, page } = req.query;
     const result = await sampleCore.doQuery(
-      'query',
-      `defType=dismax&qf=title^10 year cast^2 genres&df=catch_all&start=${
+      'select',
+      `&start=${
         (page - 1) * page_size
       }&rows=${page_size}&q=${query}`.replaceAll(' ', '%20')
     );
