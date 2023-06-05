@@ -740,9 +740,8 @@
     <lst name="defaults">
       <str name="echoParams">explicit</str>
       <int name="rows">10</int>
-      <!-- <str name="mm">75%</str>
-      <str name="defType">dismax</str>
-      <str name="df">title</str> -->
+      <!-- <str name="defType">dismax</str> -->
+      <!-- <str name="df">title</str> -->
     </lst>
   </requestHandler>
 

@@ -1,44 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/public/css/index.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="/public/css/index.css" />
+    -
     <title>Search Engine</title>
-</head>
-<body>
-    <div class="container">
-        <div class="page_title" onclick="window.location.href = '/'">
-            <p>This is a search engine</p>
+  </head>
+  <body>
+    <div class="container custom-container">
+      <div class="page_title text-center">
+        <h1>Search for movies</h1>
+      </div>
+      <div class="search_bar text-center mt-3">
+        <div class="input-group">
+          <input
+            name="search_text"
+            type="text"
+            class="form-control"
+            placeholder="Search..."
+            onkeydown="if (event.keyCode == 13) document.querySelector('.search_bar_button').click()"
+          />
+          <div class="input-group-append">
+            <button class="btn btn-primary search_bar_button ms-2">Go</button>
+          </div>
         </div>
-        <div class="search_bar">
-            <div class="search_bar_text_button">
-                <input 
-                    name="search_text"
-                    type="text"
-                    placeholder="Search..."
-                    onkeydown = "if (event.keyCode == 13) document.querySelector('.search_bar_button').click()" >
-                    <button class="search_bar_button">Go</button>
-            </div>
-            <ul class="suggestions">
-                
-            </ul>
-        </div>
-
-        <div class="pagination_movies">
-            <div class="pagination_section">
-
-            </div>
-    
-            <div class="movies">
-        </div>
-
-        </div>
-
-        <div></div>
-
+        <ul class="list-group suggestions"></ul>
+      </div>
+      <div class="pagination_movies mt-3">
+        <div class="pagination_section mt-3"></div>
+        <div class="movies mt-3"></div>
+      </div>
+      <div></div>
     </div>
-</body>
-<script src="/public/js/index.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/js/index.js"></script>
+  </body>
 </html>

@@ -4,17 +4,24 @@ const DbConnection = require('../db/index');
 
 const sampleCore = DbConnection.getSampleCore();
 
-const page_size = 10;
+const default_range = { start: '*', end: '*' };
 
 router.get('/', async (req, res) => {
   try {
-    const { query, page } = req.query;
-    const result = await sampleCore.doQuery(
-      'select',
-      `&start=${
-        (page - 1) * page_size
-      }&rows=${page_size}&q=${query}`.replaceAll(' ', '%20')
-    );
+    let { query, page, page_size, range } = req.query;
+
+    if (!range) {
+      range = default_range;
+    }
+
+    const q = sampleCore
+      .query()
+      .q(`title:${query}`)
+      // .fq(`year:[${range.start} TO ${range.end}]`)
+      .start((page - 1) * page_size)
+      .rows(page_size);
+
+    const result = await sampleCore.search(q);
 
     const movies = result.response.docs;
 
