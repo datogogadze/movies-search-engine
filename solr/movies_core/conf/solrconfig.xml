@@ -740,8 +740,9 @@
     <lst name="defaults">
       <str name="echoParams">explicit</str>
       <int name="rows">10</int>
-      <!-- <str name="defType">dismax</str> -->
-      <!-- <str name="df">title</str> -->
+      <str name="df">title</str>
+      <str name="defType">dismax</str>
+      <str name="qf">title^3 title_ngrams</str>
     </lst>
   </requestHandler>
 

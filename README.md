@@ -14,8 +14,8 @@ To execute ./deploy.sh also run chmod +x deploy.sh
 
 Indexing is done for all filelds. title, year, genres, cast.
 
-Querying is performed by just one word, which is searched in all of the fields.
+Querying is performed by title, which is analyzed 2 ways (1. Look for words; 2. Ngrams ).
 
 All relevant documents are returned shown in the UI.
 
-Each request needs the query word and page number. (page size is 10)
+Each request needs the query term, page size and page number.

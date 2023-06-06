@@ -16,8 +16,8 @@ router.get('/', async (req, res) => {
 
     const q = sampleCore
       .query()
-      .q(`title:${query}`)
-      // .fq(`year:[${range.start} TO ${range.end}]`)
+      .q(query)
+      .fq({ field: 'year', value: `[${range.start} TO ${range.end}]` })
       .start((page - 1) * page_size)
       .rows(page_size);
 

@@ -1,4 +1,8 @@
 let active_search = '';
+let active = 1;
+let num_pages = 1;
+let num_movies_found = 0;
+const PAGE_SIZE = 10;
 
 const search_bar = document.querySelector('input[name="search_text"]');
 search_bar.addEventListener('input', async (event) => {
@@ -21,8 +25,9 @@ document
     const { success, num_found, movies } = result;
     if (!success) return;
     active = 1;
-    addPagination(num_found);
+    num_movies_found = num_found;
     showResults(movies);
+    showPagination();
   });
 
 const sendSearchRequest = async (query, page_size, page) => {
@@ -30,51 +35,45 @@ const sendSearchRequest = async (query, page_size, page) => {
     `/search?query=${query}&page_size=${page_size}&page=${page}`
   );
   const data = await response.json();
-  console.log(data);
   return data;
 };
 
 const sendSuggestionsRequest = async (term) => {
   const response = await fetch(`/search/suggestions?term=${term}`);
   const data = await response.json();
-  console.log(data);
   return data;
 };
 
-let active = 1;
-const PAGE_SIZE = 10;
-const addPagination = (num_found) => {
-  let num_pages = Math.ceil(num_found / 10);
-  const pagination = document.querySelector('.pagination_section');
-  while (pagination.firstChild) {
-    pagination.removeChild(pagination.firstChild);
-  }
-
-  if (num_found <= PAGE_SIZE) {
+const showPagination = () => {
+  if (num_movies_found <= PAGE_SIZE) {
+    document.querySelector('.pagination_section').style.display = 'none';
     return;
   }
-
-  const previous_button = document.createElement('button');
-  previous_button.classList.add('btn', 'btn-primary');
-  previous_button.innerHTML = '<i class="bi bi-arrow-left"></i> Previous';
-  previous_button.addEventListener('click', async (event) => {
-    if (active === 1) return;
-    active -= 1;
-    updatePage(active);
-  });
-
-  const next_button = document.createElement('button');
-  next_button.classList.add('btn', 'btn-primary', 'ms-3');
-  next_button.innerHTML = 'Next <i class="bi bi-arrow-right"></i>';
-  next_button.addEventListener('click', async (event) => {
-    if (active === num_pages) return;
-    active += 1;
-    updatePage(active);
-  });
-
-  pagination.appendChild(previous_button);
-  pagination.appendChild(next_button);
+  document.querySelector('.pagination_section').style.display = 'flex';
+  num_pages = Math.ceil(num_movies_found / 10);
+  const pageNumber = document.querySelector('.page-number');
+  pageNumber.textContent = `${active} / ${num_pages}`;
 };
+
+const previous_button = document.querySelector('.previous-button');
+previous_button.addEventListener('click', async (event) => {
+  if (active === 1) return;
+  active -= 1;
+  updatePage(active);
+  document.querySelector(
+    '.page-number'
+  ).textContent = `${active} / ${num_pages}`;
+});
+
+const next_button = document.querySelector('.next-button');
+next_button.addEventListener('click', async (event) => {
+  if (active === num_pages) return;
+  active += 1;
+  updatePage(active);
+  document.querySelector(
+    '.page-number'
+  ).textContent = `${active} / ${num_pages}`;
+});
 
 const updatePage = async (page) => {
   let query = search_bar.value;
@@ -86,6 +85,7 @@ const updatePage = async (page) => {
   const result = await sendSearchRequest(query, PAGE_SIZE, page);
   if (!result) return;
   const { success, num_found, movies } = result;
+  num_movies_found = num_found;
   if (!success) return;
   showResults(movies);
 };
@@ -171,4 +171,5 @@ const showSuggestions = (suggestions) => {
 search_bar.addEventListener('focusout', (event) => {
   document.querySelector('.suggestions').style.display = 'none';
   document.querySelector('.pagination_movies').style.display = 'block';
+  showPagination();
 });
