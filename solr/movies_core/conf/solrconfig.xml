@@ -743,6 +743,7 @@
       <str name="df">title</str>
       <str name="defType">dismax</str>
       <str name="qf">title^3 title_ngrams</str>
+      <str name="mm">75%</str>
     </lst>
   </requestHandler>
 
@@ -819,9 +820,9 @@
       <str name="name">mySuggester</str>
       <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
       <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">title</str>
+      <str name="field">title_ngrams</str>
       <!-- <str name="weightField"></str> -->
-      <str name="suggestAnalyzerFieldType">text_general</str>
+      <str name="suggestAnalyzerFieldType">title_ngrams</str>
       <str name="buildOnStartup">true</str>
       <str name="buildOnCommit">true</str>
       <bool name="exactMatchFirst">true</bool>

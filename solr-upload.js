@@ -21,7 +21,6 @@ const main = async () => {
     let currentBatch = [];
     jsonStream.on('data', (object) => {
       currentBatch.push(object);
-      object.tester_1 = [1, 2, 3];
       if (currentBatch.length >= batchSize) {
         processBatch(currentBatch);
         currentBatch = [];
