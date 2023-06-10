@@ -2,7 +2,7 @@ version: '3'
 services:
   search_engine:
     image: solr
-    container_name: search_engine
+    container_name: movies_search_engine
     ports:
       - '8984:8983'
     volumes:

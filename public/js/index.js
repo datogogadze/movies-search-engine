@@ -1,7 +1,6 @@
 let active_search = '';
 let active = 1;
 let num_pages = 1;
-let num_movies_found = 0;
 const PAGE_SIZE = 10;
 
 const search_bar = document.querySelector('input[name="search_text"]');
@@ -21,7 +20,7 @@ from_date.addEventListener('input', async (event) => {
   const from = from_date.value;
   const to = to_date.value;
   if (validateNumber(from) && validateNumber(to)) {
-    fireNewSearch(from, to);
+    fireSearch(from, to, false, 1);
   }
 });
 
@@ -29,29 +28,15 @@ to_date.addEventListener('input', async (event) => {
   const from = from_date.value;
   const to = to_date.value;
   if (validateNumber(from) && validateNumber(to)) {
-    fireNewSearch(from, to);
+    fireSearch(from, to, false, 1);
   }
 });
 
 document
   .querySelector('.search_bar_button')
   .addEventListener('click', async (event) => {
-    fireNewSearch(from_date.value, to_date.value);
+    fireSearch(from_date.value, to_date.value, true, 1);
   });
-
-const fireNewSearch = async (from, to) => {
-  const query = search_bar.value;
-  if (!query) return;
-  active_search = query;
-  const result = await sendSearchRequest(query, PAGE_SIZE, 1, from, to);
-  if (!result) return;
-  const { success, num_found, movies } = result;
-  if (!success) return;
-  active = 1;
-  num_movies_found = num_found;
-  showResults(movies);
-  showPagination();
-};
 
 function validateNumber(input) {
   var numberRegex = /^\d+$/;
@@ -65,10 +50,12 @@ function validateNumber(input) {
 const sendSearchRequest = async (query, page_size, page, from, to) => {
   if (!validateNumber(from)) {
     from = 1900;
+    from_date.value = 1900;
   }
 
   if (!validateNumber(to)) {
     to = new Date().getFullYear();
+    to_date.value = new Date().getFullYear();
   }
 
   const response = await fetch(
@@ -84,7 +71,7 @@ const sendSuggestionsRequest = async (term) => {
   return data;
 };
 
-const showPagination = () => {
+const showPagination = (num_movies_found) => {
   if (num_movies_found <= PAGE_SIZE) {
     document.querySelector('.pagination_section').style.display = 'none';
     return;
@@ -99,41 +86,37 @@ const previous_button = document.querySelector('.previous-button');
 previous_button.addEventListener('click', async (event) => {
   if (active === 1) return;
   active -= 1;
-  updatePage(active);
-  document.querySelector(
-    '.page-number'
-  ).textContent = `${active} / ${num_pages}`;
+  await fireSearch(from_date.value, to_date.value, false, active);
 });
 
 const next_button = document.querySelector('.next-button');
 next_button.addEventListener('click', async (event) => {
   if (active === num_pages) return;
   active += 1;
-  updatePage(active);
-  document.querySelector(
-    '.page-number'
-  ).textContent = `${active} / ${num_pages}`;
+  await fireSearch(from_date.value, to_date.value, false, active);
 });
 
-const updatePage = async (page) => {
-  let query = search_bar.value;
-  if (query != active_search) {
-    query = active_search;
-    search_bar.value = query;
+const fireSearch = async (from, to, searchClicked, page) => {
+  const query = search_bar.value;
+  if (!query || (searchClicked && active_search === query)) return;
+  if (searchClicked) {
+    active_search = query;
   }
-
   const result = await sendSearchRequest(
-    query,
+    active_search,
     PAGE_SIZE,
     page,
-    from_date.value,
-    to_date.value
+    from,
+    to
   );
+
   if (!result) return;
   const { success, num_found, movies } = result;
-  num_movies_found = num_found;
+
   if (!success) return;
+  active = page;
   showResults(movies);
+  showPagination(num_found);
 };
 
 const showResults = (movies) => {
@@ -217,5 +200,5 @@ const showSuggestions = (suggestions) => {
 search_bar.addEventListener('focusout', (event) => {
   document.querySelector('.suggestions').style.display = 'none';
   document.querySelector('.pagination_movies').style.display = 'block';
-  showPagination();
+  // showPagination();
 });
