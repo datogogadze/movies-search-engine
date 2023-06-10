@@ -43,14 +43,8 @@ router.get('/', async (req, res) => {
 router.get('/suggestions', async (req, res) => {
   try {
     const { term } = req.query;
-    const result = await sampleCore.doQuery(
-      'suggest',
-      `suggest=true&suggest.build=false&suggest.dictionary=mySuggester&wt=json&suggest.q=${term}`.replaceAll(
-        ' ',
-        '%20'
-      )
-    );
-
+    const q = sampleCore.query().q(term);
+    const result = await sampleCore.doQuery('suggest', q);
     const suggestions = result.suggest.mySuggester[term].suggestions;
 
     return res.json({

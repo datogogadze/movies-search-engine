@@ -825,6 +825,7 @@
       <str name="suggestAnalyzerFieldType">title_ngrams</str>
       <str name="buildOnStartup">true</str>
       <str name="buildOnCommit">true</str>
+      <str name="build">false</str>
       <bool name="exactMatchFirst">true</bool>
       <str name="highlight">false</str>
     </lst>
