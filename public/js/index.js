@@ -66,7 +66,7 @@ const sendSearchRequest = async (query, page_size, page, from, to) => {
 };
 
 const sendSuggestionsRequest = async (term) => {
-  const response = await fetch(`/search/suggestions?term=${term}`);
+  const response = await fetch(`/suggest?term=${term}`);
   const data = await response.json();
   return data;
 };

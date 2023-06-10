@@ -1,5 +1,6 @@
 const express = require('express');
 const search = require('./router/search');
+const suggest = require('./router/suggest');
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/search', search);
+app.use('/suggest', suggest);
 
 const port = process.env.PORT | 3000;
 app.listen(port, () => {
