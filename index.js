@@ -8,7 +8,8 @@ app.set('view engine', 'ejs');
 app.use('/public', express.static('public'));
 
 app.get('/', (req, res) => {
-  res.render('index');
+  const currentYear = new Date().getFullYear();
+  res.render('index', { currentYear });
 });
 
 app.use('/search', search);

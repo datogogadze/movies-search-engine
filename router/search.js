@@ -4,20 +4,14 @@ const DbConnection = require('../db/index');
 
 const sampleCore = DbConnection.getSampleCore();
 
-const default_range = { start: '*', end: '*' };
-
 router.get('/', async (req, res) => {
   try {
-    let { query, page, page_size, range } = req.query;
-
-    if (!range) {
-      range = default_range;
-    }
+    let { query, page, page_size, from, to } = req.query;
 
     const q = sampleCore
       .query()
       .q(query)
-      .fq({ field: 'year', value: `[${range.start} TO ${range.end}]` })
+      .fq({ field: 'year', value: `[${from} TO ${to}]` })
       .start((page - 1) * page_size)
       .rows(page_size);
 
