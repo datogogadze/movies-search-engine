@@ -36,13 +36,18 @@
               value="<%= currentYear %>"
             />
           </div>
-          <div class="categories mt-2">
-            <ul></ul>
+
+          <div
+            class="pagination_section d-flex justify-content-between mt-3"
+          ></div>
+
+          <div class="genres mt-3">
+            <ul class="list-group genres-list"></ul>
           </div>
         </div>
 
         <div class="d-flex flex-column ms-4">
-          <div class="search-result">
+          <div class="search-result position-relative">
             <div class="search_bar">
               <div class="input-group">
                 <input
@@ -58,24 +63,9 @@
                   </button>
                 </div>
               </div>
-              <ul class="list-group suggestions"></ul>
             </div>
-            <div class="pagination_movies mt-3">
-              <div class="pagination_section justify-content-center">
-                <button class="previous-button btn btn-outline-primary btn-sm">
-                  <i class="bi bi-arrow-left"></i> Previous
-                </button>
-
-                <button
-                  class="page-number btn btn-secondary btn-sm ms-2"
-                ></button>
-
-                <button class="next-button btn btn-outline-primary btn-sm ms-2">
-                  Next <i class="bi bi-arrow-right"></i>
-                </button>
-              </div>
-              <div class="movies mt-3"></div>
-            </div>
+            <ul class="list-group suggestions position-absolute z-index-1"></ul>
+            <div class="movies mt-3"></div>
           </div>
         </div>
       </div>

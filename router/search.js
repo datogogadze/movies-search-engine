@@ -11,18 +11,26 @@ router.get('/', async (req, res) => {
     const q = sampleCore
       .query()
       .q(query)
+      .facet({ on: true })
       .fq({ field: 'year', value: `[${from} TO ${to}]` })
       .start((page - 1) * page_size)
       .rows(page_size);
 
     const result = await sampleCore.search(q);
 
-    const movies = result.response.docs;
+    const genresList = result.facet_counts.facet_fields.genres;
+    const genres = {};
+    for (let i = 0; i < genresList.length; i += 2) {
+      const genre = genresList[i];
+      const count = genresList[i + 1];
+      genres[genre] = count;
+    }
 
     return res.json({
       success: true,
       num_found: result.response.numFound,
-      movies,
+      movies: result.response.docs,
+      genres,
     });
   } catch (err) {
     return res.json({

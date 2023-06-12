@@ -13,6 +13,8 @@ search_bar.addEventListener('input', async (event) => {
     const { success, suggestions } = await sendSuggestionsRequest(term);
     if (!success) return;
     showSuggestions(suggestions);
+  } else {
+    document.querySelector('.suggestions').style.display = 'none';
   }
 });
 
@@ -72,29 +74,59 @@ const sendSuggestionsRequest = async (term) => {
 };
 
 const showPagination = (num_movies_found) => {
-  if (num_movies_found <= PAGE_SIZE) {
-    document.querySelector('.pagination_section').style.display = 'none';
-    return;
+  const pagination_section = document.querySelector('.pagination_section');
+
+  while (pagination_section.firstChild) {
+    pagination_section.removeChild(pagination_section.firstChild);
   }
-  document.querySelector('.pagination_section').style.display = 'flex';
+
   num_pages = Math.ceil(num_movies_found / PAGE_SIZE);
-  const pageNumber = document.querySelector('.page-number');
-  pageNumber.textContent = `${active} / ${num_pages}`;
+
+  const previous_button = document.createElement('button');
+  previous_button.classList.add(
+    'previous-button',
+    'btn',
+    'btn-outline-primary',
+    'btn-sm'
+  );
+  previous_button.innerHTML = '<i class="bi bi-arrow-left"></i>';
+
+  const page_number = document.createElement('div');
+  page_number.classList.add(
+    'page-number',
+    'btn',
+    'btn-secondary',
+    'btn-sm',
+    'ms-2'
+  );
+  page_number.textContent = `${active} / ${num_pages}`;
+
+  const next_button = document.createElement('button');
+  next_button.classList.add(
+    'next-button',
+    'btn',
+    'btn-outline-primary',
+    'btn-sm',
+    'ms-2'
+  );
+  next_button.innerHTML = '<i class="bi bi-arrow-right"></i>';
+
+  pagination_section.appendChild(previous_button);
+  pagination_section.appendChild(page_number);
+  pagination_section.appendChild(next_button);
+
+  previous_button.addEventListener('click', async (event) => {
+    if (active === 1) return;
+    active -= 1;
+    await fireSearch(from_date.value, to_date.value, false, active);
+  });
+
+  next_button.addEventListener('click', async (event) => {
+    if (active === num_pages) return;
+    active += 1;
+    await fireSearch(from_date.value, to_date.value, false, active);
+  });
 };
-
-const previous_button = document.querySelector('.previous-button');
-previous_button.addEventListener('click', async (event) => {
-  if (active === 1) return;
-  active -= 1;
-  await fireSearch(from_date.value, to_date.value, false, active);
-});
-
-const next_button = document.querySelector('.next-button');
-next_button.addEventListener('click', async (event) => {
-  if (active === num_pages) return;
-  active += 1;
-  await fireSearch(from_date.value, to_date.value, false, active);
-});
 
 const fireSearch = async (from, to, searchClicked, page) => {
   const query = search_bar.value;
@@ -111,12 +143,27 @@ const fireSearch = async (from, to, searchClicked, page) => {
   );
 
   if (!result) return;
-  const { success, num_found, movies } = result;
+  const { success, num_found, movies, genres } = result;
 
   if (!success) return;
   active = page;
   showResults(movies);
   showPagination(num_found);
+  showGenres(genres);
+};
+
+const showGenres = (genres) => {
+  const genres_list = document.querySelector('.genres-list');
+  while (genres_list.firstChild) {
+    genres_list.removeChild(genres_list.firstChild);
+  }
+
+  Object.keys(genres).forEach((genre) => {
+    const genre_div = document.createElement('div');
+    genre_div.classList.add('list-group-item');
+    genre_div.innerText = `${genre} (${genres[genre]})`;
+    genres_list.appendChild(genre_div);
+  });
 };
 
 const showResults = (movies) => {
@@ -126,7 +173,6 @@ const showResults = (movies) => {
   }
 
   document.querySelector('.suggestions').style.display = 'none';
-  document.querySelector('.pagination_movies').style.display = 'block';
 
   if (movies.length === 0) {
     const movie_div = document.createElement('div');
@@ -164,7 +210,7 @@ const showResults = (movies) => {
       cast.innerText = `Cast: ${
         movie.cast ? movie.cast.join(', ') : 'No cast info'
       }`;
-      card_body.appendChild(cast);
+      // card_body.appendChild(cast);
       movie_div.appendChild(card_body);
       movies_div.appendChild(movie_div);
     });
@@ -178,7 +224,6 @@ const showSuggestions = (suggestions) => {
   }
 
   ul.style.display = 'block';
-  document.querySelector('.pagination_movies').style.display = 'none';
 
   if (suggestions.length === 0) return;
 
@@ -199,6 +244,4 @@ const showSuggestions = (suggestions) => {
 
 search_bar.addEventListener('focusout', (event) => {
   document.querySelector('.suggestions').style.display = 'none';
-  document.querySelector('.pagination_movies').style.display = 'block';
-  // showPagination();
 });

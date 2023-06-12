@@ -1,7 +1,3 @@
-.pagination_movies {
-  display: none;
-}
-
 .page-body {
   width: 100%;
   height: 100vh;
@@ -13,4 +9,29 @@
 
 .search-result {
   width: 400px;
+}
+
+.previous-button {
+  width: 55px;
+}
+
+.next-button {
+  width: 55px;
+}
+
+.page-number {
+  width: 55px;
+}
+
+.suggestions {
+  z-index: 1000;
+  width: 100%;
+  cursor: pointer;
+}
+
+.suggestion {
+  background-color: grey;
+  color: white;
+  font-style: italic;
+  padding: 10px;
 }

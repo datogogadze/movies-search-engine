@@ -744,6 +744,9 @@
       <str name="defType">dismax</str>
       <str name="qf">title^3 title_ngrams</str>
       <str name="mm">75%</str>
+      <str name="facet.field">genres</str>
+      <str name="facet.mincount">1</str>
+      <str name="facet.sort">index</str>
     </lst>
   </requestHandler>
 
@@ -820,9 +823,9 @@
       <str name="name">mySuggester</str>
       <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
       <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">title_ngrams</str>
+      <str name="field">title</str>
       <!-- <str name="weightField"></str> -->
-      <str name="suggestAnalyzerFieldType">title_ngrams</str>
+      <str name="suggestAnalyzerFieldType">title_words</str>
       <str name="buildOnStartup">true</str>
       <str name="buildOnCommit">true</str>
       <str name="build">false</str>
