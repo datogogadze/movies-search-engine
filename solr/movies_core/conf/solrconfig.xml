@@ -744,7 +744,7 @@
       <str name="defType">dismax</str>
       <str name="qf">title^3 title_ngrams</str>
       <str name="mm">75%</str>
-      <str name="facet.field">genres</str>
+      <!-- <str name="facet.field">genres</str> -->
       <str name="facet.mincount">1</str>
       <str name="facet.sort">index</str>
     </lst>

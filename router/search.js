@@ -4,17 +4,26 @@ const DbConnection = require('../db/index');
 
 const sampleCore = DbConnection.getSampleCore();
 
-router.get('/', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    let { query, page, page_size, from, to } = req.query;
+    let { query, page, page_size, from, to, selected_genres } = req.body;
+
+    console.log(selected_genres);
 
     const q = sampleCore
       .query()
       .q(query)
-      .facet({ on: true })
+      .facet({ on: true, field: '{!ex=dt}genres' })
       .fq({ field: 'year', value: `[${from} TO ${to}]` })
       .start((page - 1) * page_size)
       .rows(page_size);
+
+    if (selected_genres.length > 0) {
+      q.fq({
+        field: '{!tag=dt}genres',
+        value: `(${selected_genres.join(' OR ')})`,
+      });
+    }
 
     const result = await sampleCore.search(q);
 

@@ -1,6 +1,7 @@
 let active_search = '';
 let active = 1;
 let num_pages = 1;
+let active_genres = [];
 const PAGE_SIZE = 10;
 
 const search_bar = document.querySelector('input[name="search_text"]');
@@ -22,7 +23,7 @@ from_date.addEventListener('input', async (event) => {
   const from = from_date.value;
   const to = to_date.value;
   if (validateNumber(from) && validateNumber(to)) {
-    fireSearch(from, to, false, 1);
+    fireSearch(from, to, false, 1, active_genres);
   }
 });
 
@@ -30,14 +31,14 @@ to_date.addEventListener('input', async (event) => {
   const from = from_date.value;
   const to = to_date.value;
   if (validateNumber(from) && validateNumber(to)) {
-    fireSearch(from, to, false, 1);
+    fireSearch(from, to, false, 1, active_genres);
   }
 });
 
 document
   .querySelector('.search_bar_button')
   .addEventListener('click', async (event) => {
-    fireSearch(from_date.value, to_date.value, true, 1);
+    fireSearch(from_date.value, to_date.value, true, 1, active_genres);
   });
 
 function validateNumber(input) {
@@ -49,7 +50,14 @@ function validateNumber(input) {
   );
 }
 
-const sendSearchRequest = async (query, page_size, page, from, to) => {
+const sendSearchRequest = async (
+  query,
+  page_size,
+  page,
+  from,
+  to,
+  selected_genres
+) => {
   if (!validateNumber(from)) {
     from = 1900;
     from_date.value = 1900;
@@ -60,9 +68,21 @@ const sendSearchRequest = async (query, page_size, page, from, to) => {
     to_date.value = new Date().getFullYear();
   }
 
-  const response = await fetch(
-    `/search?query=${query}&page_size=${page_size}&page=${page}&from=${from}&to=${to}`
-  );
+  const body = {
+    query,
+    page_size,
+    page,
+    from,
+    to,
+    selected_genres,
+  };
+
+  const response = await fetch('/search', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
   const data = await response.json();
   return data;
 };
@@ -118,17 +138,29 @@ const showPagination = (num_movies_found) => {
   previous_button.addEventListener('click', async (event) => {
     if (active === 1) return;
     active -= 1;
-    await fireSearch(from_date.value, to_date.value, false, active);
+    await fireSearch(
+      from_date.value,
+      to_date.value,
+      false,
+      active,
+      active_genres
+    );
   });
 
   next_button.addEventListener('click', async (event) => {
     if (active === num_pages) return;
     active += 1;
-    await fireSearch(from_date.value, to_date.value, false, active);
+    await fireSearch(
+      from_date.value,
+      to_date.value,
+      false,
+      active,
+      active_genres
+    );
   });
 };
 
-const fireSearch = async (from, to, searchClicked, page) => {
+const fireSearch = async (from, to, searchClicked, page, selected_genres) => {
   const query = search_bar.value;
   if (!query || (searchClicked && active_search === query)) return;
   if (searchClicked) {
@@ -139,7 +171,8 @@ const fireSearch = async (from, to, searchClicked, page) => {
     PAGE_SIZE,
     page,
     from,
-    to
+    to,
+    selected_genres
   );
 
   if (!result) return;
@@ -149,10 +182,10 @@ const fireSearch = async (from, to, searchClicked, page) => {
   active = page;
   showResults(movies);
   showPagination(num_found);
-  showGenres(genres);
+  showGenres(genres, selected_genres);
 };
 
-const showGenres = (genres) => {
+const showGenres = (genres, selected_genres) => {
   const genres_list = document.querySelector('.genres-list');
   while (genres_list.firstChild) {
     genres_list.removeChild(genres_list.firstChild);
@@ -160,10 +193,28 @@ const showGenres = (genres) => {
 
   Object.keys(genres).forEach((genre) => {
     const genre_div = document.createElement('div');
-    genre_div.classList.add('list-group-item');
+    genre_div.classList.add('list-group-item', 'genre');
     genre_div.innerText = `${genre} (${genres[genre]})`;
     genres_list.appendChild(genre_div);
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.value = genre;
+    if (selected_genres.includes(genre)) {
+      checkbox.checked = true;
+    }
+    checkbox.addEventListener('change', handleGenreSelection);
+    genre_div.appendChild(checkbox);
   });
+};
+
+const handleGenreSelection = (event) => {
+  if (event.target.checked) {
+    active_genres.push(event.target.value);
+  } else {
+    active_genres = active_genres.filter((g) => event.target.value !== g);
+  }
+
+  fireSearch(from_date.value, to_date.value, false, active, active_genres);
 };
 
 const showResults = (movies) => {
