@@ -19,3 +19,5 @@ Querying is performed by title, which is analyzed 2 ways (1. Look for words; 2. 
 All relevant documents are returned shown in the UI.
 
 Each request needs the query term, page size and page number.
+
+![Alt Text](./images/index.png)

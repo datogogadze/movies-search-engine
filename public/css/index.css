@@ -8,7 +8,7 @@
 }
 
 .search-result {
-  width: 400px;
+  width: 620px;
 }
 
 .previous-button {
@@ -40,4 +40,32 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  font-size: 15px;
+}
+
+.genres {
+  width: 100%;
+  max-height: calc(100vh - 350px);
+  overflow: auto;
+}
+
+.movies {
+  max-height: calc(100vh - 150px);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+}
+
+.movie {
+  width: 200px;
+  max-height: 135px;
+  overflow: hidden;
+}
+
+.nothing-found {
+  width: 620px;
+  height: 400px;
+  text-align: center;
+  padding: 50px;
 }

@@ -8,8 +8,6 @@ router.post('/', async (req, res) => {
   try {
     let { query, page, page_size, from, to, selected_genres } = req.body;
 
-    console.log(selected_genres);
-
     const q = sampleCore
       .query()
       .q(query)

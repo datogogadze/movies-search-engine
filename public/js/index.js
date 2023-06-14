@@ -2,7 +2,7 @@ let active_search = '';
 let active = 1;
 let num_pages = 1;
 let active_genres = [];
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 12;
 
 const search_bar = document.querySelector('input[name="search_text"]');
 const from_date = document.querySelector('input[name="from_date"]');
@@ -99,6 +99,13 @@ const showPagination = (num_movies_found) => {
   while (pagination_section.firstChild) {
     pagination_section.removeChild(pagination_section.firstChild);
   }
+
+  if (num_movies_found <= PAGE_SIZE) {
+    pagination_section.classList.remove('mb-3');
+    return;
+  }
+
+  pagination_section.classList.add('mb-3');
 
   num_pages = Math.ceil(num_movies_found / PAGE_SIZE);
 
@@ -226,37 +233,31 @@ const showResults = (movies) => {
   document.querySelector('.suggestions').style.display = 'none';
 
   if (movies.length === 0) {
-    const movie_div = document.createElement('div');
-    movie_div.classList.add('card', 'movie', 'mb-3');
-    const card_body = document.createElement('div');
-    card_body.classList.add('card-body');
-    const not_found = document.createElement('h5');
-    not_found.classList.add('card-title');
-    not_found.innerText = `Nothing found...`;
-    card_body.appendChild(not_found);
-    movie_div.appendChild(card_body);
-    movies_div.appendChild(movie_div);
+    const nothing_found = document.createElement('div');
+    nothing_found.classList.add('nothing-found');
+    nothing_found.innerText = 'Nothing found...';
+    movies_div.appendChild(nothing_found);
   } else {
     movies.forEach((movie) => {
       const movie_div = document.createElement('div');
-      movie_div.classList.add('card', 'movie', 'mb-3');
+      movie_div.classList.add('card', 'movie');
       const card_body = document.createElement('div');
       card_body.classList.add('card-body');
-      const title = document.createElement('h5');
+      const title = document.createElement('h6');
       title.classList.add('card-title');
-      title.innerText = `Title: ${movie.title}`;
+      title.innerText = `${movie.title}`;
       card_body.appendChild(title);
-      const year = document.createElement('p');
+      const year = document.createElement('div');
       year.classList.add('card-text');
       year.innerText = `Year: ${movie.year}`;
       card_body.appendChild(year);
-      const genres = document.createElement('p');
+      const genres = document.createElement('div');
       genres.classList.add('card-text');
-      genres.innerText = `Genres: ${
+      genres.innerText = `${
         movie.genres ? movie.genres.join(', ') : 'No genres info'
       }`;
       card_body.appendChild(genres);
-      const cast = document.createElement('p');
+      const cast = document.createElement('div');
       cast.classList.add('card-text');
       cast.innerText = `Cast: ${
         movie.cast ? movie.cast.join(', ') : 'No cast info'
